@@ -41,14 +41,16 @@ const Products = () => {
   }
 
   return (
-    <div className='auth_base'>
-      <h1>Products</h1>
+    <div className='Center'>
+      <h1>Produkty</h1>
       {products.length > 0 ? (
-        <ul>
-          {products.map((product) => (
-            <Product key={product.id} product={product} />
-          ))}
-        </ul>
+          <div className='container text-center'>
+            <div className='row'>
+              {products.map((product) => (
+                <Product key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
       ) : (
         <p>No products found.</p>
       )}

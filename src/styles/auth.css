@@ -1,3 +1,19 @@
 .auth_base{
     width: 500px !important;
+    display: flex !important; 
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: rgb(194, 194, 194);
+    margin-top: 20vh;
+    height: 400px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.Center {
+    text-align: center;
+}
+
+.Card {
+    height: 50vh!important;
 }

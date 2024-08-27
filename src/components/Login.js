@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import '../styles/auth.css'
 import DEV_URL from "../config/DevConfig";
+import { redirect } from "react-router-dom";
 
 const Login = () => {
   const [user_, setUser_] = useState('');
@@ -12,36 +13,6 @@ const Login = () => {
   const [error, setError] = useState('');
   const [token, setToken] = useState('');
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await fetch('http://localhost:8000/auth/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded',
-  //       },
-  //       body: new URLSearchParams({
-  //         username: user_,
-  //         password: password,
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Login failed');
-  //     }
-
-  //     const data = await response.json();
-  //     setToken(data.access_token);
-  //     console.log('Token:', data.access_token);
-
-  //     Cookies.set('token', data.access_token, { expires: 7 }); // Expires in 7 days
-  //     console.log('Token stored in cookie:', data.access_token);
-
-  //   } catch (err) {
-  //     setError('Login failed: ' + err.message);
-  //   }
-  // };
 
 
   const handleLogin = async (e) => {
@@ -49,7 +20,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/auth/login',
+        `${DEV_URL}/auth/login`,
         new URLSearchParams({
           username: user_,
           password: password,
@@ -61,10 +32,21 @@ const Login = () => {
         }
       );
       console.log('Token:', response);
+
+      // Check if the response is successful
+    if (response.status === 200) {
       
+      // Set token in state and cookie
       setToken(response.data.access_token);
       Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
       console.log('Token stored in cookie:', response.data.access_token);
+
+      // Redirect to the desired URL after successful login
+      window.location.href = 'http://localhost:3000/';
+    } else {
+      setError('Login failed. Please check your credentials.');
+      console.error('Login failed:', response);
+    }
     } catch (err) {
       // Handle errors
       setError('Login failed. Please check your credentials.');
@@ -82,7 +64,7 @@ const Login = () => {
         <Form.Label>Nazwa użytkownika</Form.Label>
         <Form.Control 
           type="username" 
-          placeholder="Podaj nazwę" 
+          // placeholder="Podaj nazwę" 
           onChange={(e) => setUser_(e.target.value)}
         />
         <Form.Text className="text-muted">
@@ -91,10 +73,10 @@ const Login = () => {
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
+        <Form.Label>Hasło</Form.Label>
         <Form.Control 
           type="password" 
-          placeholder="Wpisz hasło" 
+          // placeholder="Wpisz hasło" 
           onChange={(e) => setPassword(e.target.value)}
         />
       </Form.Group>
