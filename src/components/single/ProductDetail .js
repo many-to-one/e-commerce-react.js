@@ -1,5 +1,10 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import DEV_URL from '../../config/DevConfig';
+import Cookies from 'js-cookie';
+import '../../styles/App.css'
+import { useCart } from '../../context/cartContext';
 
 const ProductDetail  = () => {
 
@@ -14,6 +19,49 @@ const ProductDetail  = () => {
   }
 
   const { id, title, images, price, stock, rating, description, thumbnail } = product;
+  const token = Cookies.get('token');
+
+  const { getCart, cart } = useCart(); // Call useCart() at the top level of your component
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      await getCart(); // Fetch the cart data
+    };
+
+    fetchCart(); // Call the function to fetch cart data
+  }, [])
+
+  console.log('cart ---', cart);
+
+  const addToCard = async (e) => {
+    e.preventDefault();
+
+    const body = [
+      {
+        product_id: id,
+        quantity: 1
+      }
+    ]
+
+    try {
+      const response = await axios.post(`${DEV_URL}/cart/new`, 
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request header
+          },
+        }
+      )
+
+      if ( response.status == 201 ) {
+        console.log('CART RESPONSE', response)
+      }
+    } catch (error) {
+      console.log('Error post cart', error)
+    }
+
+  }
+
 
   return (
     <div className="container my-4">
@@ -47,8 +95,11 @@ const ProductDetail  = () => {
           <p><strong>Description:</strong></p>
           <p>{description}</p>
           {/* Optional: Add-to-Cart Button */}
-          <button className="btn btn-primary mt-3">Add to Cart</button>
+          <button onClick={addToCard} className="btn btn-primary mt-3">Add to Cart</button>
         </div>
+      </div>
+      <div className="Message">
+        Dodano do koszyka!
       </div>
     </div>
   );

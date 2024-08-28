@@ -3,6 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import DEV_URL from '../config/DevConfig';
 import Product from './single/Product';
+import DEV_URL_R from '../config/ReactDevConfig';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -37,7 +38,8 @@ const Products = () => {
   }
 
   if (error) {
-    return <p>Error: {error}</p>; // Display error message if there's an error
+    console.log('Error: ', error)
+    window.location.href = `${DEV_URL_R}/login`
   }
 
   return (

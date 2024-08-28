@@ -1,0 +1,36 @@
+.Navi {
+    margin: 20px;
+    text-align: center;
+    background-color: rgb(152, 217, 233);
+    padding: 10px;
+}
+
+.NaviContainer {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.NaviContainerRight {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    width: 50vw;
+    padding-left: 10px;
+}
+
+.NaviContainerLeft {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-right: 50px;
+}
+
+.Search {
+    width: 450px !important;
+}
+
+.Icon {
+    cursor: pointer;
+}

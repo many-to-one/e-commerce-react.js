@@ -1,0 +1,14 @@
+.App {
+  /* text-align: center; */
+  /* width: 80vw; */
+}
+
+.Message {
+  position: absolute;
+  top: 80%;
+  left: 2%;
+  width: 300px;
+  height: 70px;
+  background-color: rgb(6, 248, 167);
+}
+

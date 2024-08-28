@@ -1,60 +1,32 @@
 import { useState } from "react";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import '../styles/auth.css'
-import DEV_URL from "../config/DevConfig";
-import { redirect } from "react-router-dom";
+import { useUser } from "../context/userContext";
+
 
 const Login = () => {
   const [user_, setUser_] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [token, setToken] = useState('');
 
-
+  const { login } = useUser();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        `${DEV_URL}/auth/login`,
-        new URLSearchParams({
-          username: user_,
-          password: password,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
-      console.log('Token:', response);
-
-      // Check if the response is successful
-    if (response.status === 200) {
-      
-      // Set token in state and cookie
-      setToken(response.data.access_token);
-      Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
-      console.log('Token stored in cookie:', response.data.access_token);
-
-      // Redirect to the desired URL after successful login
-      window.location.href = 'http://localhost:3000/';
-    } else {
-      setError('Login failed. Please check your credentials.');
-      console.error('Login failed:', response);
+    const loginData = {
+      username: user_,
+      password: password,
     }
-    } catch (err) {
-      // Handle errors
-      setError('Login failed. Please check your credentials.');
-      console.error('Error during login:', err);
+    console.log('loginData', loginData)
+    const res = await login(loginData)
+    if ( res === 'ok' ) {
+      navigate('/');
     }
+  
   };
-
-
 
   return (
 
@@ -64,7 +36,6 @@ const Login = () => {
         <Form.Label>Nazwa użytkownika</Form.Label>
         <Form.Control 
           type="username" 
-          // placeholder="Podaj nazwę" 
           onChange={(e) => setUser_(e.target.value)}
         />
         <Form.Text className="text-muted">
@@ -76,7 +47,6 @@ const Login = () => {
         <Form.Label>Hasło</Form.Label>
         <Form.Control 
           type="password" 
-          // placeholder="Wpisz hasło" 
           onChange={(e) => setPassword(e.target.value)}
         />
       </Form.Group>
