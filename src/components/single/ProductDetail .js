@@ -1,15 +1,36 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import DEV_URL from '../../config/DevConfig';
 import Cookies from 'js-cookie';
 import '../../styles/App.css'
 import { useCart } from '../../context/cartContext';
+import { useNavigate } from 'react-router-dom';
 
 const ProductDetail  = () => {
 
+  const { getCart, cart, createCart, addItemToCart } = useCart(); 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        await getCart(); 
+      } catch (error) {
+        if ( error.response.status === 401 ) {
+          navigate('/login')
+        }
+        // console.log('******ProductDetail********', error); 
+      }
+    };
+
+    fetchCart(); 
+  }, [])
+
+  console.log('cart ---', cart);
+
   const location = useLocation();
-  const product  = location.state || {}; // Destructure product from location.state
+  const product  = location.state || {}; 
   console.log('product ---', product)
   // console.log('location.state:', location.state);
 
@@ -21,43 +42,63 @@ const ProductDetail  = () => {
   const { id, title, images, price, stock, rating, description, thumbnail } = product;
   const token = Cookies.get('token');
 
-  const { getCart, cart } = useCart(); // Call useCart() at the top level of your component
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      await getCart(); // Fetch the cart data
-    };
-
-    fetchCart(); // Call the function to fetch cart data
-  }, [])
-
-  console.log('cart ---', cart);
-
-  const addToCard = async (e) => {
-    e.preventDefault();
-
-    const body = [
-      {
-        product_id: id,
-        quantity: 1
-      }
-    ]
-
+  const addItemToCart_ = async (id, body) => {
+    // console.log('CART BODY', body)
     try {
-      const response = await axios.post(`${DEV_URL}/cart/new`, 
+      const response = await axios.patch(`${DEV_URL}/cart/update/${id}`, 
         body,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request header
+            Authorization: `Bearer ${token}`, 
           },
         }
       )
 
+      console.log('CART RESPONSE', response)
       if ( response.status == 201 ) {
-        console.log('CART RESPONSE', response)
+        console.log('CART RESPONSE 200', response)
       }
     } catch (error) {
       console.log('Error post cart', error)
+    }
+
+  }
+
+
+  const addToCard = async (e) => {
+    e.preventDefault();
+
+    if ( cart === null ) {
+      // CREATE NEW CART IF THERE IS NO ONE
+      const body = [
+        {
+          product_id: id,
+          quantity: 1
+        }
+      ]
+      try {
+        await createCart(body)
+      } catch (error) {
+        if ( error.response.status === 401 ) {
+          // navigate('/login')
+          console.log('Error post cart', error)
+        }
+      }
+    } else {
+      console.log('THE USER ALLREADY HAS A CART')
+      // ADD ITEM TO CART IF USER IT ALLREADY HAS
+      const item = {
+        product_id: id,
+        quantity: 1
+      }
+      try {
+        await addItemToCart(cart.id, item)
+      } catch (error) {
+        if ( error ) { //error.response.status === 401
+          navigate('/login')
+        }
+      }
     }
 
   }
