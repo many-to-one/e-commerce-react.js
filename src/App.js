@@ -8,6 +8,8 @@ import Header from './components/Header';
 import Home from './components/Home';
 import { UserProvider } from './context/userContext';
 import { CartProvider } from './context/cartContext';
+import Cart from './components/Cart';
+import PayPage from './components/PayPage';
 
 function App() {
   const location = useLocation();
@@ -22,7 +24,8 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/product" element={<ProductDetail />} />
         <Route path="/users" element={<UsersList />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/payment" element={<PayPage />} />
       </Routes>
     </>
   );

@@ -1,0 +1,42 @@
+.CartCont {
+    width: 60vw;
+    max-width: 100%; 
+    margin: 0 auto; /* Horizontally center */
+    margin-top: 2rem; /* Optional: Adds some space from the top */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.CartDetailCont {
+    width: 50vw;
+}
+
+.CartBlock {
+    background-color: #d2c9ff;
+}
+
+.Image {
+    width: 70px;
+}
+
+.Row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.InRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.Cursor {
+    cursor: pointer;
+}
+
+.PayBtn {
+    width: 200px;
+}

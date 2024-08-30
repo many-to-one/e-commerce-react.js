@@ -27,12 +27,10 @@ const ProductDetail  = () => {
     fetchCart(); 
   }, [])
 
-  console.log('cart ---', cart);
+  // console.log('cart ---', cart);
 
   const location = useLocation();
   const product  = location.state || {}; 
-  console.log('product ---', product)
-  // console.log('location.state:', location.state);
 
   // Check if product is available
   if (!product) {
@@ -40,29 +38,11 @@ const ProductDetail  = () => {
   }
 
   const { id, title, images, price, stock, rating, description, thumbnail } = product;
-  const token = Cookies.get('token');
+  // const token = Cookies.get('token');
 
-
-  const addItemToCart_ = async (id, body) => {
-    // console.log('CART BODY', body)
-    try {
-      const response = await axios.patch(`${DEV_URL}/cart/update/${id}`, 
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      )
-
-      console.log('CART RESPONSE', response)
-      if ( response.status == 201 ) {
-        console.log('CART RESPONSE 200', response)
-      }
-    } catch (error) {
-      console.log('Error post cart', error)
-    }
-
+  const item = {
+    product_id: id,
+    quantity: 1
   }
 
 
@@ -72,10 +52,7 @@ const ProductDetail  = () => {
     if ( cart === null ) {
       // CREATE NEW CART IF THERE IS NO ONE
       const body = [
-        {
-          product_id: id,
-          quantity: 1
-        }
+        item
       ]
       try {
         await createCart(body)
@@ -85,13 +62,11 @@ const ProductDetail  = () => {
           console.log('Error post cart', error)
         }
       }
+
     } else {
+
       console.log('THE USER ALLREADY HAS A CART')
       // ADD ITEM TO CART IF USER IT ALLREADY HAS
-      const item = {
-        product_id: id,
-        quantity: 1
-      }
       try {
         await addItemToCart(cart.id, item)
       } catch (error) {
@@ -99,6 +74,7 @@ const ProductDetail  = () => {
           navigate('/login')
         }
       }
+      
     }
 
   }

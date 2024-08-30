@@ -56,7 +56,7 @@ export function CartProvider({ children }) {
     }
 
 
-    // CREATE NEW CARD
+    // ADD ITEM TO CARD
     const addItemToCart = async (id, body) => {
       // console.log('CART BODY', body)
       try {
@@ -78,6 +78,31 @@ export function CartProvider({ children }) {
       }
   
     }
+
+
+    // UPDATE ITEM'S QUANTITY
+    const updateItem = async (body) => {
+
+      console.log('CART UPDATE body', body)
+
+      try {
+        const response = await axios.patch(`${DEV_URL}/cart/cart_item/update/`, 
+          body,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
+        )
+  
+        console.log('CART UPDATE RESPONSE', response)
+        if ( response.status == 201 ) {
+          console.log('CART UPDATE RESPONSE 200', response)
+        }
+      } catch (error) {
+        console.log('Error patch cart UPDATE', error)
+      }
+  }
     
 
 
@@ -87,6 +112,7 @@ return (
             cart,
             createCart,
             addItemToCart,
+            updateItem,
         }}>
       {children}
     </CartContext.Provider>
