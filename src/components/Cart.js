@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import '../styles/cart.css'
 import { useCart } from '../context/cartContext';
 import CartProductDetail from './single/CartProductDetail';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
 
     const { getCart, cart} = useCart(); 
+    const navigate = useNavigate();
 
     const userCart = async () => {
         try {
@@ -13,6 +15,10 @@ const Cart = () => {
             console.log('CART:', cart)
         } catch (error) {
             console.log('ERROR:', error)
+            if ( error.status === 401 ) {
+                console.log('Unauthorized:', error.status)
+                navigate('/login');
+            }
         }
     }
 

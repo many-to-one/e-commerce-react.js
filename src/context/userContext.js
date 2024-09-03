@@ -9,6 +9,7 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
 
   const [user, setUser] = useState(null);
+  // const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
 
   const login = async(loginData) => {
@@ -23,13 +24,13 @@ export function UserProvider({ children }) {
           },
         }
       );
-      console.log('Token:', response);
+      console.log('LOGIN RESOINSE:', response);
 
       if (response.status === 200) {
 
-        setUser(response.data.access_token);
         Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
         console.log('Token stored in cookie:', response.data.access_token);
+        // setToken(response.data.access_token)
         return 'ok'
   
       } else {
@@ -43,6 +44,24 @@ export function UserProvider({ children }) {
         return error
       }
   };
+
+
+  const getMe = async() => {
+
+    const token = Cookies.get('token');
+    
+    const response = await axios.get(
+      `${DEV_URL}/users/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the request header
+        },
+      }
+    );
+    console.log('getMe RESPONSE:', response);
+    setUser(response.data)
+
+  };
     
 
   const logout = () => {
@@ -50,25 +69,13 @@ export function UserProvider({ children }) {
     // Also remove user data from local storage or cookies here if needed
   };
 
-  // const userData = (userId) => {
-
-  //       axios.post(`${serverIP}/auth/accessToken/`, userId,)
-  //       .then((response) => {
-  //           console.log('response.userData', response.data);
-  //           // setAccesToken(response.data.AccesToken)
-  //           setUser(response.data.user)
-  //       })
-  //       .catch ((error) => {
-  //          console.error('Error posting data:', error);
-  //          // setError('Error posting data')
-  //       });
-  // }
 
 
 return (
     <UserContext.Provider value={{ 
             login,
             user,
+            getMe,
         }}>
       {children}
     </UserContext.Provider>

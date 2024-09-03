@@ -10,6 +10,7 @@ import { UserProvider } from './context/userContext';
 import { CartProvider } from './context/cartContext';
 import Cart from './components/Cart';
 import PayPage from './components/PayPage';
+import Addproduct from './components/Addproduct';
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/add_product" element={<Addproduct />} />
         <Route path="/product" element={<ProductDetail />} />
         <Route path="/users" element={<UsersList />} />
         <Route path="/cart" element={<Cart />} />

@@ -17,7 +17,7 @@ const ProductDetail  = () => {
       try {
         await getCart(); 
       } catch (error) {
-        if ( error.response.status === 401 ) {
+        if ( error.status === 401 ) {
           navigate('/login')
         }
         // console.log('******ProductDetail********', error); 

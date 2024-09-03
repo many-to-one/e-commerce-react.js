@@ -83,7 +83,7 @@ export function CartProvider({ children }) {
     // UPDATE ITEM'S QUANTITY
     const updateItem = async (body) => {
 
-      console.log('CART UPDATE body', body)
+      // console.log('CART UPDATE body', body)
 
       try {
         const response = await axios.patch(`${DEV_URL}/cart/cart_item/update/`, 
@@ -99,6 +99,7 @@ export function CartProvider({ children }) {
         if ( response.status == 201 ) {
           console.log('CART UPDATE RESPONSE 200', response)
         }
+        return response;
       } catch (error) {
         console.log('Error patch cart UPDATE', error)
       }

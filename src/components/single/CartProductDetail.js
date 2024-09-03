@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useCart } from '../../context/cartContext';
+import { useNavigate } from 'react-router-dom';
 
 const CartProductDetail = ({cart}) => {
 
@@ -7,6 +8,8 @@ const CartProductDetail = ({cart}) => {
     const [quantities, setQuantities] = useState({});
     const [subTotals, setSubTotals] = useState({});
     const [totalAmount, setTotalAmount] = useState(cart.total_amount);
+
+    const navigate = useNavigate();
 
 
     // Initialize quantities and subtotals state from cart items
@@ -90,12 +93,38 @@ const CartProductDetail = ({cart}) => {
         });
     
         try {
-            await Promise.all(promises);
-            console.log('All cart items updated successfully');
+            const res = await Promise.all(promises);
+            console.log('All cart items updated successfully', res);
+            const allSuccessful = res.every(response => {
+                if (!response) {
+                    console.log('Undefined response:', response);
+                    return false; // Fail the check if any response is undefined
+                }
+                console.log('Response promise:', response);
+                return response.status === 201 || response.status === 200;
+            });
+        
+            if (allSuccessful) {
+                navigate('/payment', {
+                    state: {
+                        cartId: cart.id,
+                        totalAmount: cart.total_amount,
+                        otherData: 'some other data' // You can pass any data you want
+                    }
+                });
+            } else {
+                console.log('Some items were not updated successfully');
+            }
+
         } catch (error) {
             console.log('Error updating cart items', error);
         }
     };
+
+
+    const goBack = async() => {
+        navigate('/products')
+    }
     
 
   return (
@@ -152,7 +181,7 @@ const CartProductDetail = ({cart}) => {
 
                         <div class="col-4">
                             <div class="d-flex flex-row mb-3">
-                                <div class="p-2 Cursor">
+                                <div class="p-2 Cursor" onClick={goBack}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
                                     </svg>

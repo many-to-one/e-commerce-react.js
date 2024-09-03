@@ -12,3 +12,18 @@
   background-color: rgb(6, 248, 167);
 }
 
+.Cursor {
+  cursor: pointer;
+}
+
+.Gap20 {
+  gap: 20px;
+}
+
+.Center {
+  text-align: center;
+}
+
+.Height50 {
+  height: 50vh;
+}

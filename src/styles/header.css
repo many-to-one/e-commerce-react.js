@@ -1,5 +1,5 @@
 .Navi {
-    margin: 20px;
+    /* margin: 20px; */
     text-align: center;
     background-color: rgb(152, 217, 233);
     padding: 10px;
@@ -16,7 +16,7 @@
     display: flex;
     flex-direction: row;
     gap: 50px;
-    width: 50vw;
+    /* width: 50vw; */
     padding-left: 10px;
 }
 
