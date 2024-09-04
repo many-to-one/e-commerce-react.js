@@ -146,7 +146,7 @@ const CartProductDetail = ({cart}) => {
                     <tbody>
                     {cart.cart_items.map((item, index) => (
                         <tr key={index}>
-                            <td><img className="Image" src={item.product.images[0]} alt="Product Image" /></td>
+                            <td><img className="Image" src={item.product.thumbnail} alt="Product Image" /></td>
                             <td>{item.product.title}</td>
                             <td>{item.product.price}</td>
                             <td>

@@ -87,17 +87,19 @@ const Products = () => {
         )}
       </div>
 
-      {products.length > 0 ? (
-          <div className='container text-center'>
-            <div className='row'>
-              {products.map((product) => (
-                <Product key={product.id} product={product} />
-              ))}
+      <div className='ProdCont'>
+        {products.length > 0 ? (
+            <div className='container'>
+              <div className='row'>
+                {products.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))}
+              </div>
             </div>
-          </div>
-      ) : (
-        <p>No products found.</p>
-      )}
+        ) : (
+          <p>No products found.</p>
+        )}
+      </div>
     </div>
   );
 };

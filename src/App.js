@@ -11,6 +11,8 @@ import { CartProvider } from './context/cartContext';
 import Cart from './components/Cart';
 import PayPage from './components/PayPage';
 import Addproduct from './components/Addproduct';
+import Admin from './components/Admin';
+import ProductsAdmin from './components/admin_components/ProductsAdmin';
 
 function App() {
   const location = useLocation();
@@ -28,6 +30,8 @@ function App() {
         <Route path="/users" element={<UsersList />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<PayPage />} />
+        <Route path="/admin_panel" element={<Admin />} />
+        <Route path="/products_admin" element={<ProductsAdmin />} />
       </Routes>
     </>
   );
@@ -35,7 +39,7 @@ function App() {
 
 export default function AppWithRouter() {
   return (
-    <div className="App">
+    // <div className="App">
       <UserProvider>
         <CartProvider>
         <Router>
@@ -43,6 +47,6 @@ export default function AppWithRouter() {
         </Router>
         </CartProvider>
       </UserProvider>
-    </div>
+    // </div>
   );
 }

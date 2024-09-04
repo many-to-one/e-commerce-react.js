@@ -1,13 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../styles/header.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useUser } from '../context/userContext';
 
 const Header = () => {
 
   const navigate = useNavigate();
+  const { getMe, user} = useUser(); 
+
+  const userMe= async () => {
+    try {
+        await getMe();
+        console.log('userMe:', user)
+    } catch (error) {
+        console.log('ERROR:', error)
+        if ( error.status === 401 ) {
+            console.log('Unauthorized:', error.status)
+            navigate('/login');
+        }
+    }}
+
+
+  useEffect(() => {
+    userMe()
+  }, [])
 
   const goToCart = async () => {
     navigate('/cart')
+  }
+
+  const goToAdmin = async () => {
+    navigate('/admin_panel')
   }
 
   return (
@@ -22,6 +45,17 @@ const Header = () => {
           </form>
         </div>
         <div className='NaviContainerLeft'>
+
+        {/* { user.is_admin ? ( */}
+          <div className='Icon' onClick={goToAdmin}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
+          </div>
+        {/* ): (
+          <p></p>
+          )} */}
 
           <div className='Icon' onClick={goToCart}>
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">

@@ -96,6 +96,10 @@ const Addproduct = () => {
       )
   
       console.log('postProduct', res)
+
+      if ( res.status === 201 ) {
+        navigate('/product', { state: res.data });
+      }
     } catch (error) {
       console.log('postProduct error', error.response.data)
       if ( error.status === 401 ) {

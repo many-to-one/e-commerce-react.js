@@ -2,3 +2,26 @@
     margin-top: 10vh;
     gap: 20px;
 }
+
+.ProdCont {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+
+.Card {
+    height: 50vh!important;
+    margin-top: 20px !important;
+}
+
+@media screen and (max-width: 820px) {
+    .Card {
+        height: 25vh!important;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    .Card {
+        height: 50vh!important;
+    }
+  }

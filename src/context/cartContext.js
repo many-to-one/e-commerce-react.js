@@ -15,6 +15,7 @@ export function CartProvider({ children }) {
     // GET CART 
     const getCart = async () => {
 
+      console.log('getCart token', token)
         const response = await axios.get(
             `${DEV_URL}/cart/user`,
             {
