@@ -5,11 +5,13 @@ import DEV_URL from '../config/DevConfig';
 import Product from './single/Product';
 import DEV_URL_R from '../config/ReactDevConfig';
 import { useUser } from '../context/userContext';
+import { useProduct } from '../context/ProductContext';
 import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
 
   const { getMe, user} = useUser(); 
+  const { getAllProducts} = useProduct(); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState(false);
@@ -35,36 +37,23 @@ const Products = () => {
     userMe()
   }, [])
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
 
-        const response = await axios.get(`${DEV_URL}/products/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request header
-          },
-        });
+  const fetchProducts = async () => {
+    try {
+        const res = await getAllProducts();
+        console.log('fetchProducts:', res)
+        setProducts(res)
+    } catch (error) {
+        console.log('ERROR:', error)
+        if ( error.status === 401 ) {
+            console.log('Unauthorized:', error.status)
+            navigate('/login');
+        }
+    }}
 
-        setProducts(response.data); // Set users state with fetched data
-        console.log('products', response.data)
-      } catch (err) {
-        setError(err.message); // Handle any errors
-      } finally {
-        setLoading(false); // Stop the loading spinner
-      }
-    };
-
-    fetchProducts(); // Call the function to fetch users
-  }, []);
-
-  if (loading) {
-    return <p>Loading...</p>; // Display loading message while data is being fetched
-  }
-
-  if (error) {
-    console.log('Error: ', error)
-    navigate('/login');
-  }
+    useEffect(() => {
+      fetchProducts()
+    }, [])
 
 
   const addProduct = async() => {

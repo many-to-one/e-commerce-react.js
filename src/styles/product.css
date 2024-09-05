@@ -9,6 +9,15 @@
     justify-content: space-evenly;
   }
 
+.ProdAdmCont {
+  width: 75vw;
+  max-width: 100%; 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .Card {
     height: 50vh!important;
     margin-top: 20px !important;

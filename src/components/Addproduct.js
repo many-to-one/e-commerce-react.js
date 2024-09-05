@@ -4,12 +4,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import PROD_URL from '../config/ProdConfig';
 import { useNavigate } from 'react-router-dom';
+import { useCategory } from '../context/CategoryContext';
 
 const Addproduct = () => {
 
   const token = Cookies.get('token');
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
+  const {getAllCategories, categories} = useCategory();
 
   const [title, setTilte] = useState('');
   const [category, setCategory] = useState(0);
@@ -27,19 +29,12 @@ const Addproduct = () => {
   const getCategories = async() => {
     
     try {
-      const res = await axios.get(`${PROD_URL}/category/all`,
-
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        },
-      )
+      const res = await getAllCategories()
   
-      console.log('getCategories', res)
+      console.log('Addproduct getCategories', res)
   
       if ( res.status === 200 ) {
-        setCategories(res.data)
+        // setCategories(res.data)
         console.log('categories', categories)
       } 
     } catch (error) {
