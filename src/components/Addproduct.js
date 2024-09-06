@@ -5,12 +5,16 @@ import Cookies from 'js-cookie';
 import PROD_URL from '../config/ProdConfig';
 import { useNavigate } from 'react-router-dom';
 import { useCategory } from '../context/CategoryContext';
+import { useUser } from '../context/userContext';
+import { useProduct } from '../context/ProductContext';
 
 const Addproduct = () => {
 
-  const token = Cookies.get('token');
+  // const token = Cookies.get('token');
   const navigate = useNavigate();
   // const [categories, setCategories] = useState([]);
+  const { token } = useUser(); 
+  const { createProduct } = useProduct();
   const {getAllCategories, categories} = useCategory();
 
   const [title, setTilte] = useState('');
@@ -29,7 +33,7 @@ const Addproduct = () => {
   const getCategories = async() => {
     
     try {
-      const res = await getAllCategories()
+      const res = await getAllCategories(token)
   
       console.log('Addproduct getCategories', res)
   
@@ -80,15 +84,7 @@ const Addproduct = () => {
    }
 
     try {
-      const res = await axios.post(`${PROD_URL}/products/new`,
-        postData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+      const res = await createProduct(postData, token)
   
       console.log('postProduct', res)
 
@@ -96,7 +92,7 @@ const Addproduct = () => {
         navigate('/product', { state: res.data });
       }
     } catch (error) {
-      console.log('postProduct error', error.response.data)
+      console.log('postProduct error', error.response)
       if ( error.status === 401 ) {
         navigate('/login')
       } 
@@ -145,7 +141,7 @@ const Addproduct = () => {
 
         <div class="input-group w-50">
             <span class="input-group-text" id="addon-wrapping">Zdjęcie</span>
-            <input type="text" class="form-control" aria-describedby="addon-wrapping" onChange={(e) => setImage(e.target.value)}/>
+            <input required type="text" class="form-control" aria-describedby="addon-wrapping" onChange={(e) => setImage(e.target.value)}/>
         </div>
 
         <div class="input-group w-50 Height50">

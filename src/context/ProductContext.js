@@ -9,11 +9,9 @@ const ProductContext = createContext();
 export function ProductProvider({ children }) {
 
     const [products, setProducts] = useState(null);
-    const token = Cookies.get('token');
-
 
     // GET CART 
-    const getAllProducts = async () => {
+    const getAllProducts = async (token) => {
 
       console.log('getAllProducts token', token)
         const response = await axios.get(
@@ -36,30 +34,32 @@ export function ProductProvider({ children }) {
     }
 
 
-//     // CREATE NEW CARD
-//     const createCart = async (body) => {
-//       try {
-//         const response = await axios.post(`${DEV_URL}/cart/new`, 
-//           body,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`, 
-//             },
-//           }
-//         )
+    // CREATE NEW PRODUCT
+    const createProduct = async (body, token) => {
+      try {
+        const response = await axios.post(`${DEV_URL}/products/new`, 
+          body,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
+        )
   
-//         if ( response.status == 201 ) {
-//           console.log('CART RESPONSE', response)
-//         }
-//       } catch (error) {
-//         console.log('Error post cart', error)
-//       }
+        if ( response.status == 201 ) {
+          console.log('CREATE PRODUCT RESPONSE', response)
+          return response
+        }
+      } catch (error) {
+        console.log('Error post product', error)
+        return error
+      }
   
-//     }
+    }
 
 
     // UPDATE PRODUCT
-    const updateProduct = async (id, body) => {
+    const updateProduct = async (id, body, token) => {
       // console.log('CART BODY', body)
       try {
         const response = await axios.patch(`${DEV_URL}/products/update/${id}`, 
@@ -72,10 +72,7 @@ export function ProductProvider({ children }) {
         )
   
         console.log('CART RESPONSE', response)
-        if ( response.status == 201 ) {
-          console.log('CART RESPONSE 200', response)
-          return response.data
-        }
+        return response
       } catch (error) {
         console.log('Error post cart', error)
       }
@@ -113,6 +110,7 @@ export function ProductProvider({ children }) {
 return (
     <ProductContext.Provider value={{ 
             getAllProducts,
+            createProduct,
             updateProduct,
             // createCart,
             // addItemToCart,

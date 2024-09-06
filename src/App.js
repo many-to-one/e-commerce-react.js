@@ -49,7 +49,7 @@ export default function AppWithRouter() {
   return (
     // <div className="App">
       <UserProvider>
-        {/* <CategoryProvider> */}
+        <CategoryProvider>
           <ProductProvider>
             <CartProvider>
               <Router>
@@ -57,7 +57,7 @@ export default function AppWithRouter() {
               </Router>
             </CartProvider>
           </ProductProvider>
-        {/* </CategoryProvider> */}
+        </CategoryProvider>
       </UserProvider>
     // </div>
   );

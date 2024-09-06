@@ -9,11 +9,11 @@ const CategoryContext = createContext();
 export function CategoryProvider({ children }) {
 
     const [categories, setCategories] = useState(null);
-    const token = Cookies.get('token');
+    // const token = Cookies.get('token');
 
 
     // GET CART 
-    const getAllCategories = async () => {
+    const getAllCategories = async (token) => {
 
       console.log('getAllCategories token', token)
         const response = await axios.get(
@@ -29,6 +29,7 @@ export function CategoryProvider({ children }) {
 
         if ( response.status === 200 ) {
             setCategories(response.data)
+            return response
         } else {
             setCategories(null)
         }

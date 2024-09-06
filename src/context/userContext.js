@@ -9,7 +9,7 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
 
   const [user, setUser] = useState(null);
-  // const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
 
   const login = async(loginData) => {
@@ -28,9 +28,10 @@ export function UserProvider({ children }) {
 
       if (response.status === 200) {
 
-        Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
-        console.log('Token stored in cookie:', response.data.access_token);
-        // setToken(response.data.access_token)
+        // Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
+        // console.log('Token stored in cookie:', response.data.access_token);
+        setToken(response.data.access_token)
+        console.log('Token:', response.data.access_token);
         return 'ok'
   
       } else {
@@ -46,9 +47,9 @@ export function UserProvider({ children }) {
   };
 
 
-  const getMe = async() => {
+  const getMe = async(token) => {
 
-    const token = Cookies.get('token');
+    // const token = Cookies.get('token');
     
     const response = await axios.get(
       `${DEV_URL}/users/me`,
@@ -59,8 +60,10 @@ export function UserProvider({ children }) {
       }
     );
     console.log('getMe RESPONSE:', response);
-    setUser(response.data)
-
+    if ( response.status === 200 ) {
+      setUser(response.data)
+    }
+    return response
   };
     
 
@@ -75,6 +78,7 @@ return (
     <UserContext.Provider value={{ 
             login,
             user,
+            token,
             getMe,
         }}>
       {children}

@@ -9,11 +9,11 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
 
     const [cart, setCart] = useState(null);
-    const token = Cookies.get('token');
+    // const token = Cookies.get('token');
 
 
     // GET CART 
-    const getCart = async () => {
+    const getCart = async (token) => {
 
       console.log('getCart token', token)
         const response = await axios.get(
@@ -36,7 +36,7 @@ export function CartProvider({ children }) {
 
 
     // CREATE NEW CARD
-    const createCart = async (body) => {
+    const createCart = async (body, token) => {
       try {
         const response = await axios.post(`${DEV_URL}/cart/new`, 
           body,
@@ -58,7 +58,7 @@ export function CartProvider({ children }) {
 
 
     // ADD ITEM TO CARD
-    const addItemToCart = async (id, body) => {
+    const addItemToCart = async (id, body, token) => {
       // console.log('CART BODY', body)
       try {
         const response = await axios.patch(`${DEV_URL}/cart/update/${id}`, 
@@ -82,7 +82,7 @@ export function CartProvider({ children }) {
 
 
     // UPDATE ITEM'S QUANTITY
-    const updateItem = async (body) => {
+    const updateItem = async (body, token) => {
 
       // console.log('CART UPDATE body', body)
 

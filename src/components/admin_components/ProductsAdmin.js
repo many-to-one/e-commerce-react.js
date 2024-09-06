@@ -10,8 +10,9 @@ import { useProduct } from '../../context/ProductContext';
 
 const ProductsAdmin = () => {
 
-    const token = Cookies.get('token');
+    // const token = Cookies.get('token');
     const navigate = useNavigate();
+    const { token } = useUser(); 
     const { getAllProducts} = useProduct(); 
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ const ProductsAdmin = () => {
 
     const fetchProducts = async () => {
       try {
-          const res = await getAllProducts();
+          const res = await getAllProducts(token);
           console.log('fetchProducts:', res)
           setProducts(res)
       } catch (error) {

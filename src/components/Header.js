@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/header.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../context/userContext';
@@ -6,12 +6,18 @@ import { useUser } from '../context/userContext';
 const Header = () => {
 
   const navigate = useNavigate();
-  const { getMe, user} = useUser(); 
+  const { getMe, user, token} = useUser(); 
+
+  const [login, setLogin] = useState(false);
 
   const userMe= async () => {
     try {
-        await getMe();
-        console.log('userMe:', user)
+        const res = await getMe(token);
+        if ( res.status === 200 ){
+          console.log('userMe:', user)
+          setLogin(true)
+        }
+
     } catch (error) {
         console.log('ERROR:', error)
         if ( error.status === 401 ) {
@@ -45,6 +51,11 @@ const Header = () => {
           </form>
         </div>
         <div className='NaviContainerLeft'>
+        { login ? (
+          <p>{user.username}</p>
+        ):(
+          <p></p>
+        )}
 
         {/* { user.is_admin ? ( */}
           <div className='Icon' onClick={goToAdmin}>

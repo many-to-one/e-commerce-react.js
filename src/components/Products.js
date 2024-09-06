@@ -10,20 +10,20 @@ import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
 
-  const { getMe, user} = useUser(); 
+  const { getMe, user, token} = useUser(); 
   const { getAllProducts} = useProduct(); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState(false);
   const [error, setError] = useState(null);
 
-  const token = Cookies.get('token');
+  // const token = Cookies.get('token');
   const navigate = useNavigate();
 
   const userMe= async () => {
     try {
-        await getMe();
-        console.log('userMe:', user)
+        await getMe(token);
+        console.log('userMe:', user, token)
     } catch (error) {
         console.log('ERROR:', error)
         if ( error.status === 401 ) {
@@ -40,7 +40,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-        const res = await getAllProducts();
+        const res = await getAllProducts(token);
         console.log('fetchProducts:', res)
         setProducts(res)
     } catch (error) {
