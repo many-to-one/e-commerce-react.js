@@ -60,7 +60,7 @@ export function ProductProvider({ children }) {
 
     // UPDATE PRODUCT
     const updateProduct = async (id, body, token) => {
-      // console.log('CART BODY', body)
+      console.log('updateProduct', id, body, token)
       try {
         const response = await axios.patch(`${DEV_URL}/products/update/${id}`, 
           body,

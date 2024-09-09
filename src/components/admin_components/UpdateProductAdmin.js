@@ -10,23 +10,22 @@ const UpdateProductAdmin = () => {
     const location = useLocation();
     const {product}  = location.state || {}; 
     const { id, title, brand, price, discount_percentage, stock, description, thumbnail, category_id } = product || {};
-    console.log('UpdateProductAdmin', title)
+    // console.log('UpdateProductAdmin', title)
 
     const navigate = useNavigate();
     const { token } = useUser(); 
-    // const [categories, setCategories] = useState([]);
     const {getAllCategories, categories} = useCategory();
     const { updateProduct } = useProduct();
 
-    const [title_, setTilte] = useState('');
+    const [title_, setTilte] = useState(title);
     const [categories_, setCategories] = useState([]);
-    const [category, setCategory] = useState(0);
-    const [price_, setPrice] = useState(0);
-    const [discount_, setDiscount] = useState(0);
-    const [stock_, setStock] = useState(0);
-    const [brand_, setBrand] = useState('');
-    const [image_, setImage] = useState('');
-    const [description_, setDescription] = useState('');
+    const [category_id_, setCategoryId] = useState(category_id);
+    const [price_, setPrice] = useState(price || 0);
+    const [discount_, setDiscount] = useState(discount_percentage);
+    const [stock_, setStock] = useState(stock);
+    const [brand_, setBrand] = useState(brand);
+    const [thumbnail_, setImage] = useState(thumbnail);
+    const [description_, setDescription] = useState(description);
 
   
     const getCategories = async () => {
@@ -34,11 +33,11 @@ const UpdateProductAdmin = () => {
       try {
         const res = await getAllCategories(token)
     
-        console.log('UpdateProductAdmin getCategories', res.data)
+        // console.log('UpdateProductAdmin getCategories', res.data)
     
         if ( res.status === 200 ) {
           setCategories(res.data)
-          console.log('categories', categories)
+          // console.log('categories', categories)
         } 
       } catch (error) {
         if ( error.status === 401 ) {
@@ -53,18 +52,21 @@ const UpdateProductAdmin = () => {
     }, [])
 
 
-    const editProduct = async () => {
+    const editProduct = async (e) => {
+      e.preventDefault()
       const postData = {
-        title: title,
-        category_id: parseInt(category),
-        price: parseFloat(price), // Ensure price is a float
-        discount_percentage: discount_percentage ? parseFloat(discount_percentage) : null, // Convert to float or set to null
-        stock: parseInt(stock), // Ensure stock is an integer
-        brand: brand || null, // Handle empty strings as null
-        thumbnail: thumbnail || null, // Handle empty strings as null
-        description: description || null, // Handle empty strings as null
+        title: title_,
+        category_id: parseInt(category_id_),
+        price: parseFloat(price_), 
+        discount_percentage: discount_ ? parseFloat(discount_) : null, 
+        stock: parseInt(stock_), 
+        brand: brand_ || null, 
+        thumbnail: thumbnail_ || null, 
+        description: description_ || null, 
      }
-     const res = await updateProduct(postData, token)
+
+     const res = await updateProduct(id, postData, token)
+    //  console.log('editProduct', res)
      if ( res.status === 200 ) {
       navigate('/products_admin')
      } else {
@@ -73,7 +75,8 @@ const UpdateProductAdmin = () => {
     }
 
   return (
-    <form class="cart d-flex flex-column align-items-center AddProduct" onSubmit={editProduct}>
+
+      <form class="cart d-flex flex-column align-items-center AddProduct" onSubmit={editProduct}>
 
         <div class="input-group w-50 primary">
             <span class="input-group-text" id="addon-wrapping">Nazwa</span>
@@ -81,7 +84,7 @@ const UpdateProductAdmin = () => {
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping" 
-              value={title} 
+              value={title_} 
               onChange={(e) => setTilte(e.target.value)}/>
         </div>
 
@@ -91,18 +94,18 @@ const UpdateProductAdmin = () => {
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping" 
-              value={brand} 
-              onChange={(e) => setTilte(e.target.value)}/>
+              value={brand_} 
+              onChange={(e) => setBrand(e.target.value)}/>
         </div>
 
         <div className="input-group w-50">
-          <select className="form-select" aria-label="Default select example" onChange={(e) => setCategory(e.target.value)}>
+          <select className="form-select" aria-label="Default select example" onChange={(e) => setCategoryId(e.target.value)}>
             {/* Default option */}
             <option selected disabled>Kategoria</option>
 
             {/* Map through categories */}
             {categories_.map((cat) => (
-              <option key={cat.id} value={parseInt(cat.id)} selected={cat.id === category_id}>
+              <option key={cat.id} value={parseInt(cat.id)} selected={cat.id === category_id_}>
                 {cat.name}
               </option>
             ))}
@@ -116,17 +119,18 @@ const UpdateProductAdmin = () => {
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping"
-              value={price} 
+              value={price_} 
               onChange={(e) => setPrice(parseFloat(e.target.value))}/>
         </div>
 
         <div class="input-group w-50">
-            <span class="input-group-text" id="addon-wrapping" onChange={(e) => setDiscount(parseFloat(e.target.value))}>Rabat</span>
+            <span class="input-group-text" id="addon-wrapping">Rabat</span>
             <input 
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping"
-              value={discount_percentage ? discount_percentage : 0}
+              value={discount_ ? discount_ : 0}
+              onChange={(e) => setDiscount(parseFloat(e.target.value))}
             />
         </div>
 
@@ -136,13 +140,8 @@ const UpdateProductAdmin = () => {
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping" 
-              value={stock}
+              value={stock_}
               onChange={(e) => setStock(parseInt(e.target.value))}/>
-        </div>
-
-        <div class="input-group w-50">
-            <span class="input-group-text" id="addon-wrapping">Marka</span>
-            <input type="text" class="form-control" aria-describedby="addon-wrapping" onChange={(e) => setBrand(e.target.value)}/>
         </div>
 
         <div class="input-group w-50">
@@ -151,7 +150,7 @@ const UpdateProductAdmin = () => {
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping" 
-              value={thumbnail}
+              value={thumbnail_}
               onChange={(e) => setImage(e.target.value)}/>
         </div>
 
@@ -161,14 +160,13 @@ const UpdateProductAdmin = () => {
               type="text" 
               class="form-control" 
               aria-describedby="addon-wrapping" 
-              value={description}
+              value={description_}
               onChange={(e) => setDescription(e.target.value)}
             />
         </div>
+        <button type='submit' class="btn btn-primary">Edytuj</button>
+        </form>
 
-        <button type="submit" class="btn btn-primary">Edytuj</button>
-
-    </form>
   )
 }
 
