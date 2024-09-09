@@ -4,6 +4,7 @@
     margin: 0 auto; /* Horizontally center */
     margin-top: 2rem; /* Optional: Adds some space from the top */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }

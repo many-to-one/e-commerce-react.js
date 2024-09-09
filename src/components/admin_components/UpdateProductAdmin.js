@@ -7,13 +7,14 @@ import { useProduct } from '../../context/ProductContext';
 
 const UpdateProductAdmin = () => {
 
+    const token = Cookies.get('token');
     const location = useLocation();
     const {product}  = location.state || {}; 
     const { id, title, brand, price, discount_percentage, stock, description, thumbnail, category_id } = product || {};
     // console.log('UpdateProductAdmin', title)
 
     const navigate = useNavigate();
-    const { token } = useUser(); 
+    // const { token } = useUser(); 
     const {getAllCategories, categories} = useCategory();
     const { updateProduct } = useProduct();
 

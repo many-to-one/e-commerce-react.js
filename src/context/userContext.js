@@ -28,7 +28,7 @@ export function UserProvider({ children }) {
 
       if (response.status === 200) {
 
-        // Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
+        Cookies.set('token', response.data.access_token, { expires: 7 }); // Expires in 7 days
         // console.log('Token stored in cookie:', response.data.access_token);
         setToken(response.data.access_token)
         console.log('Token:', response.data.access_token);

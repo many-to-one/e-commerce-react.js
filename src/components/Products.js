@@ -10,14 +10,14 @@ import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
 
-  const { getMe, user, token} = useUser(); 
+  const { getMe, user} = useUser(); 
   const { getAllProducts} = useProduct(); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState(false);
   const [error, setError] = useState(null);
 
-  // const token = Cookies.get('token');
+  const token = Cookies.get('token');
   const navigate = useNavigate();
 
   const userMe= async () => {

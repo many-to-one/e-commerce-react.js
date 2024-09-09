@@ -33,7 +33,7 @@ const Addproduct = () => {
   const getCategories = async() => {
     
     try {
-      const res = await getAllCategories(token)
+      const res = await getAllCategories()
   
       console.log('Addproduct getCategories', res)
   
@@ -110,14 +110,19 @@ const Addproduct = () => {
             <input type="text" class="form-control" aria-describedby="addon-wrapping" onChange={(e) => setTilte(e.target.value)}/>
         </div>
 
-        <div class="input-group w-50">
-          <select class="form-select" aria-label="Default select example" onChange={(e) => setCategory(e.target.value)}>
+        <div className="input-group w-50">
+          <select className="form-select" aria-label="Default select example" onChange={(e) => setCategory(e.target.value)}>
             <option selected>Kategoria</option>
-            {categories.map((cat) => (
-              <option value={parseInt(cat.id)}>{cat.name}</option>
-            ))}
+            {categories ? (
+              categories.map((cat) => (
+                <option key={cat.id} value={parseInt(cat.id)}>{cat.name}</option>
+              ))
+            ) : (
+              <option disabled>Not Found</option>
+            )}
           </select>
         </div>
+
 
         <div class="input-group w-50">
             <span class="input-group-text" id="addon-wrapping">Cena</span>

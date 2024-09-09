@@ -71,39 +71,35 @@ export function ProductProvider({ children }) {
           }
         )
   
-        console.log('CART RESPONSE', response)
+        console.log('updateProduct RESPONSE', response)
         return response
       } catch (error) {
-        console.log('Error post cart', error)
+        console.log('Error updateProduct', error)
       }
   
     }
 
 
-//     // UPDATE ITEM'S QUANTITY
-//     const updateItem = async (body) => {
+    // DELETE THE PRODUCT
+    const deleteItem = async (id, token) => {
 
-//       // console.log('CART UPDATE body', body)
+      console.log('deleteItem', id, token)
 
-//       try {
-//         const response = await axios.patch(`${DEV_URL}/cart/cart_item/update/`, 
-//           body,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`, 
-//             },
-//           }
-//         )
+      try {
+        const response = await axios.delete(`${DEV_URL}/products/delete/${id}/`, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
+        )
   
-//         console.log('CART UPDATE RESPONSE', response)
-//         if ( response.status == 201 ) {
-//           console.log('CART UPDATE RESPONSE 200', response)
-//         }
-//         return response;
-//       } catch (error) {
-//         console.log('Error patch cart UPDATE', error)
-//       }
-//   }
+        console.log('deleteItem RESPONSE', response)
+        return response;
+      } catch (error) {
+        console.log('Error deleteItem', error)
+      }
+  }
     
 
 
@@ -112,9 +108,7 @@ return (
             getAllProducts,
             createProduct,
             updateProduct,
-            // createCart,
-            // addItemToCart,
-            // updateItem,
+            deleteItem,
         }}>
       {children}
     </ProductContext.Provider>

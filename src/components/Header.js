@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import '../styles/header.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../context/userContext';
+import Cookies from 'js-cookie';
 
 const Header = () => {
 
+  const token = Cookies.get('token');
   const navigate = useNavigate();
-  const { getMe, user, token} = useUser(); 
+  const { getMe, user} = useUser(); 
 
   const [login, setLogin] = useState(false);
 

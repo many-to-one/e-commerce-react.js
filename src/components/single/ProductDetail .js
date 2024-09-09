@@ -11,24 +11,6 @@ const ProductDetail  = () => {
 
   const { getCart, cart, createCart, addItemToCart } = useCart(); 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const fetchCart = async () => {
-  //     try {
-  //       await getCart(); 
-  //     } catch (error) {
-  //       if ( error.status === 401 ) {
-  //         navigate('/login')
-  //       }
-  //       // console.log('******ProductDetail********', error); 
-  //     }
-  //   };
-
-  //   fetchCart(); 
-  // }, [])
-
-  // console.log('cart ---', cart);
-
   const location = useLocation();
   const product  = location.state || {}; 
 
