@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import DEV_URL from '../../config/DevConfig';
+import DEV_URL from '../../../config/DevConfig';
 import axios from 'axios';
-import { useUser } from '../../context/userContext';
+import { useUser } from '../../../context/userContext';
 import ProductAdmin from './ProductAdmin';
-import { useProduct } from '../../context/ProductContext';
-import DeleteConfirmationModal from './DeleteConfirmationModal ';
+import { useProduct } from '../../../context/ProductContext';
+import DeleteConfirmationModal from '../DeleteConfirmationModal ';
 
 
 const ProductsAdmin = () => {
@@ -25,7 +25,7 @@ const ProductsAdmin = () => {
 
     const fetchProducts = async () => {
       try {
-          const res = await getAllProducts(token);
+          const res = await getAllProducts();
           console.log('fetchProducts:', res)
           setProducts(res)
       } catch (error) {
@@ -53,7 +53,7 @@ const ProductsAdmin = () => {
 
 
     const deleteProduct = async () => {
-      const res = await deleteItem(itemToDelete, token)
+      const res = await deleteItem(itemToDelete)
       console.log('editProduct', res)
       if ( res.status == 200 ) {
         console.log('deleteItem 200', res)

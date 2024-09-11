@@ -3,109 +3,83 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import DEV_URL from '../config/DevConfig';
 import DEV_URL_R from '../config/ReactDevConfig';
+import { useApi } from './ApiContext';
 
 const CategoryContext = createContext();
 
 export function CategoryProvider({ children }) {
 
     const [categories, setCategories] = useState(null);
-    const token = Cookies.get('token');
+    const {get_, post_, patch_, delete_} = useApi();
 
-
-    // GET CART 
     const getAllCategories = async () => {
 
-      console.log('getAllCategories token', token)
-        const response = await axios.get(
+        const response = await get_(
             `${DEV_URL}/category/all`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Include the token in the request header
-              },
-            }
         )
 
         console.log('getAllCategories', response)
 
         if ( response.status === 200 ) {
             setCategories(response.data)
-            return response
         } else {
             setCategories(null)
         }
+
+        return response
     }
 
 
-//     // CREATE NEW CARD
-//     const createCart = async (body) => {
-//       try {
-//         const response = await axios.post(`${DEV_URL}/cart/new`, 
-//           body,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`, 
-//             },
-//           }
-//         )
+    // CREATE NEW CATEGORY
+    const createCategory = async (body) => {
+
+      try {
+        const response = await post_(
+          `${DEV_URL}/category/new`, 
+          body
+        )
   
-//         if ( response.status == 201 ) {
-//           console.log('CART RESPONSE', response)
-//         }
-//       } catch (error) {
-//         console.log('Error post cart', error)
-//       }
+        return response
+
+      } catch (error) {
+        console.log('Error post cart', error)
+      }
   
-//     }
+    }
 
 
-//     // ADD ITEM TO CARD
-//     const addItemToCart = async (id, body) => {
-//       // console.log('CART BODY', body)
-//       try {
-//         const response = await axios.patch(`${DEV_URL}/cart/update/${id}`, 
-//           body,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`, 
-//             },
-//           }
-//         )
+    // UPDATE CATEGORY
+    const updateCategory = async (id, body) => {
+      console.log('updateCategory', id, body)
+      try {
+        const response = await patch_(
+          `${DEV_URL}/category/update/${id}`, 
+          body,
+        ) 
+        console.log('updateCategory RESPONSE', response)
+        return response
+      } catch (error) {
+        console.log('Error updateCategory', error)
+      }
   
-//         console.log('CART RESPONSE', response)
-//         if ( response.status == 201 ) {
-//           console.log('CART RESPONSE 200', response)
-//         }
-//       } catch (error) {
-//         console.log('Error post cart', error)
-//       }
+    }
   
-//     }
+ // DELETE THE CATEGORY
+    const deleteCategory = async (id) => {
 
+      console.log('deleteCategory', id)
 
-//     // UPDATE ITEM'S QUANTITY
-//     const updateItem = async (body) => {
-
-//       // console.log('CART UPDATE body', body)
-
-//       try {
-//         const response = await axios.patch(`${DEV_URL}/cart/cart_item/update/`, 
-//           body,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`, 
-//             },
-//           }
-//         )
+      try {
+        const response = await delete_(
+          `${DEV_URL}/category/delete/${id}/`
+        )
   
-//         console.log('CART UPDATE RESPONSE', response)
-//         if ( response.status == 201 ) {
-//           console.log('CART UPDATE RESPONSE 200', response)
-//         }
-//         return response;
-//       } catch (error) {
-//         console.log('Error patch cart UPDATE', error)
-//       }
-//   }
+        console.log('deleteCategory RESPONSE', response)
+        return response;
+      } catch (error) {
+        console.log('Error deleteCategory', error)
+      }
+  }
     
 
 
@@ -113,9 +87,9 @@ return (
     <CategoryContext.Provider value={{ 
         getAllCategories,
         categories,
-            // createCart,
-            // addItemToCart,
-            // updateItem,
+        createCategory,
+        updateCategory,
+        deleteCategory,
         }}>
       {children}
     </CategoryContext.Provider>

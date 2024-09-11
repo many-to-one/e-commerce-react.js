@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import '../styles/product.css'
+import '../../../styles/product.css'
 import axios from 'axios'; 
 import Cookies from 'js-cookie';
-import PROD_URL from '../config/ProdConfig';
+import PROD_URL from '../../../config/ProdConfig';
 import { useNavigate } from 'react-router-dom';
-import { useCategory } from '../context/CategoryContext';
-import { useUser } from '../context/userContext';
-import { useProduct } from '../context/ProductContext';
+import { useCategory } from '../../../context/CategoryContext';
+import { useUser } from '../../../context/userContext';
+import { useProduct } from '../../../context/ProductContext';
+import DEV_URL from '../../../config/DevConfig';
 
 const Addproduct = () => {
 
-  // const token = Cookies.get('token');
+  const token = Cookies.get('token');
   const navigate = useNavigate();
   // const [categories, setCategories] = useState([]);
-  const { token } = useUser(); 
+  // const { token } = useUser(); 
   const { createProduct } = useProduct();
   const {getAllCategories, categories} = useCategory();
 
@@ -84,7 +85,7 @@ const Addproduct = () => {
    }
 
     try {
-      const res = await createProduct(postData, token)
+      const res = await createProduct(postData)
   
       console.log('postProduct', res)
 

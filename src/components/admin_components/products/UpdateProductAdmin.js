@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { useCategory } from '../../context/CategoryContext';
-import { useUser } from '../../context/userContext';
-import { useProduct } from '../../context/ProductContext';
+import { useCategory } from '../../../context/CategoryContext';
+import { useUser } from '../../../context/userContext';
+import { useProduct } from '../../../context/ProductContext';
 
 const UpdateProductAdmin = () => {
 
-    const token = Cookies.get('token');
     const location = useLocation();
     const {product}  = location.state || {}; 
     const { id, title, brand, price, discount_percentage, stock, description, thumbnail, category_id } = product || {};
@@ -15,13 +14,14 @@ const UpdateProductAdmin = () => {
 
     const navigate = useNavigate();
     // const { token } = useUser(); 
-    const {getAllCategories, categories} = useCategory();
+    const {getAllCategories} = useCategory();
     const { updateProduct } = useProduct();
 
     const [title_, setTilte] = useState(title);
     const [categories_, setCategories] = useState([]);
     const [category_id_, setCategoryId] = useState(category_id);
-    const [price_, setPrice] = useState(price || 0);
+    // const [price_, setPrice] = useState(price || 0);
+    const [price_, setPrice] = useState(price ? price.toString() : '');
     const [discount_, setDiscount] = useState(discount_percentage);
     const [stock_, setStock] = useState(stock);
     const [brand_, setBrand] = useState(brand);
@@ -32,9 +32,9 @@ const UpdateProductAdmin = () => {
     const getCategories = async () => {
       
       try {
-        const res = await getAllCategories(token)
+        const res = await getAllCategories()
     
-        // console.log('UpdateProductAdmin getCategories', res.data)
+        console.log('UpdateProductAdmin getCategories', res.data)
     
         if ( res.status === 200 ) {
           setCategories(res.data)
@@ -66,7 +66,7 @@ const UpdateProductAdmin = () => {
         description: description_ || null, 
      }
 
-     const res = await updateProduct(id, postData, token)
+     const res = await updateProduct(id, postData)
     //  console.log('editProduct', res)
      if ( res.status === 200 ) {
       navigate('/products_admin')
@@ -74,6 +74,17 @@ const UpdateProductAdmin = () => {
       navigate('/')
      }
     }
+
+
+    const handlePriceChange = (e) => {
+      const value = e.target.value;
+      // Allow only numbers and a single decimal point
+      if (/^\d*\.?\d*$/.test(value)) {
+        setPrice(value);
+      }
+    };
+
+    
 
   return (
 
@@ -121,7 +132,8 @@ const UpdateProductAdmin = () => {
               class="form-control" 
               aria-describedby="addon-wrapping"
               value={price_} 
-              onChange={(e) => setPrice(parseFloat(e.target.value))}/>
+              onChange={handlePriceChange}
+            />
         </div>
 
         <div class="input-group w-50">

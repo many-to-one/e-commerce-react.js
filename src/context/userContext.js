@@ -3,11 +3,13 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import DEV_URL from '../config/DevConfig';
 import DEV_URL_R from '../config/ReactDevConfig';
+import { useApi } from './ApiContext';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
 
+  // const {get_, post_, patch_, delete_} = useApi();
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
@@ -45,6 +47,19 @@ export function UserProvider({ children }) {
         return error
       }
   };
+
+
+  // const getMe = async() => {
+
+  //   // const token = Cookies.get('token');
+    
+  //   const response = await get_(
+  //     `${DEV_URL}/users/me`,
+
+  //   );
+  //   console.log('getMe RESPONSE:', response);
+  //   return response
+  // };
 
 
   const getMe = async(token) => {

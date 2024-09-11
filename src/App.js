@@ -12,11 +12,15 @@ import { ProductProvider } from './context/ProductContext';
 import { CartProvider } from './context/cartContext';
 import Cart from './components/Cart';
 import PayPage from './components/PayPage';
-import Addproduct from './components/Addproduct';
+import Addproduct from './components/admin_components/products/Addproduct';
 import Admin from './components/Admin';
-import ProductsAdmin from './components/admin_components/ProductsAdmin';
-import ProductAdmin from './components/admin_components/ProductAdmin';
-import UpdateProductAdmin from './components/admin_components/UpdateProductAdmin';
+import ProductsAdmin from './components/admin_components/products/ProductsAdmin';
+import ProductAdmin from './components/admin_components/products/ProductAdmin';
+import UpdateProductAdmin from './components/admin_components/products/UpdateProductAdmin';
+import { ApiProvider } from './context/ApiContext';
+import CategoriesAdmin from './components/admin_components/categories/CategoriesAdmin';
+import AddCategory from './components/admin_components/categories/AddCategory';
+import UpdateCategoryAdmin from './components/admin_components/categories/UpdateCategoryAdmin';
 
 
 
@@ -30,16 +34,23 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+
         <Route path="/products" element={<Products />} />
         <Route path="/add_product" element={<Addproduct />} />
         <Route path="/product" element={<ProductDetail />} />
+
         <Route path="/users" element={<UsersList />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/payment" element={<PayPage />} />
         <Route path="/admin_panel" element={<Admin />} />
+
         <Route path="/products_admin" element={<ProductsAdmin />} />
         <Route path="/product_admin" element={<ProductAdmin />} />
         <Route path="/update_product_admin" element={<UpdateProductAdmin />} />
+
+        <Route path="/categories_admin" element={<CategoriesAdmin />} />
+        <Route path="/add_category" element={<AddCategory />} />
+        <Route path="/update_category_admin" element={<UpdateCategoryAdmin />} />
       </Routes>
     </>
   );
@@ -49,15 +60,17 @@ export default function AppWithRouter() {
   return (
     // <div className="App">
       <UserProvider>
-        <CategoryProvider>
-          <ProductProvider>
-            <CartProvider>
-              <Router>
-                <App />
-              </Router>
-            </CartProvider>
-          </ProductProvider>
-        </CategoryProvider>
+        <ApiProvider>
+          <CategoryProvider>
+            <ProductProvider>
+              <CartProvider>
+                <Router>
+                  <App />
+                </Router>
+              </CartProvider>
+            </ProductProvider>
+          </CategoryProvider>
+        </ApiProvider>
       </UserProvider>
     // </div>
   );
