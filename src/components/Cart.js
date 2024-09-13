@@ -6,13 +6,18 @@ import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
 
-    const { getCart, cart} = useCart(); 
+    const { getCart} = useCart(); 
     const navigate = useNavigate();
+
+    const [cart, setCart] = useState(null);
 
     const userCart = async () => {
         try {
             const res = await getCart();
-            console.log('CART:', cart)
+            console.log('CART:', res)
+            if ( res.status === 200 ) {
+                setCart(res.data)
+            }
         } catch (error) {
             console.log('ERROR:', error)
             if ( error.status === 401 ) {

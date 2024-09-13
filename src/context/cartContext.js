@@ -3,118 +3,121 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import DEV_URL from '../config/DevConfig';
 import DEV_URL_R from '../config/ReactDevConfig';
+import { useApi } from './ApiContext';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
 
-    const [cart, setCart] = useState(null);
-    // const token = Cookies.get('token');
+    const {get_, post_, patch_, delete_} = useApi();
 
 
     // GET CART 
-    const getCart = async (token) => {
+    const getCart = async () => {
 
-      console.log('getCart token', token)
-        const response = await axios.get(
-            `${DEV_URL}/cart/user`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`, // Include the token in the request header
-              },
-            }
-        )
+      const response = await get_(
+          `${DEV_URL}/cart/user`,
+      )
 
-        console.log('getCart', response)
+      console.log('GET CART', response)
 
-        if ( response.status === 200 ) {
-          setCart(response.data)
-        } else {
-          setCart(null)
-        }
+      return response
     }
 
 
     // CREATE NEW CARD
-    const createCart = async (body, token) => {
-      try {
-        const response = await axios.post(`${DEV_URL}/cart/new`, 
-          body,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, 
-            },
-          }
-        )
-  
-        if ( response.status == 201 ) {
-          console.log('CART RESPONSE', response)
-        }
-      } catch (error) {
-        console.log('Error post cart', error)
-      }
+    const createCart = async (body) => {
+
+      const response = await post_(
+          `${DEV_URL}/cart/new`,
+          body
+      )
+
+      console.log('CREATE NEW CARD', response)
+
+      return response
   
     }
 
 
     // ADD ITEM TO CARD
-    const addItemToCart = async (id, body, token) => {
-      // console.log('CART BODY', body)
-      try {
-        const response = await axios.patch(`${DEV_URL}/cart/update/${id}`, 
-          body,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, 
-            },
-          }
-        )
-  
-        console.log('CART RESPONSE', response)
-        if ( response.status == 201 ) {
-          console.log('CART RESPONSE 200', response)
-        }
-      } catch (error) {
-        console.log('Error post cart', error)
-      }
+    const addItemToCart = async (id, body) => {
+
+      const response = await patch_(
+          `${DEV_URL}/cart/update/${id}`,
+          body
+      )
+
+      console.log('ADD ITEM TO CARD', response)
+
+      return response
   
     }
 
 
     // UPDATE ITEM'S QUANTITY
-    const updateItem = async (body, token) => {
+    const updateItem = async (body) => {
 
-      // console.log('CART UPDATE body', body)
-
-      try {
-        const response = await axios.patch(`${DEV_URL}/cart/cart_item/update/`, 
-          body,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, 
-            },
-          }
+        const response = await patch_(
+            `${DEV_URL}/cart/cart_item/update`,
+            body
         )
-  
-        console.log('CART UPDATE RESPONSE', response)
-        if ( response.status == 201 ) {
-          console.log('CART UPDATE RESPONSE 200', response)
+
+        console.log("UPDATE ITEM'S QUANTITY", response)
+
+        return response
+
+    }
+
+
+    // DELETE THE CAT ITEM
+    const deleteCartItem = async (id) => {
+
+        try {
+          const response = await delete_(
+            `${DEV_URL}/cart/delete_cart_item/${id}/`
+          )
+    
+          console.log('DELETE THE CAT ITEM ', response)
+          const check = await getCart()
+          console.log('check', check)
+          if ( check.data.cart_items.length === 0 ) {
+            await deleteCart(check.data.id)
+          }
+          return response;
+        } catch (error) {
+          console.log('Error deleteCategory', error)
+          return error
         }
-        return response;
-      } catch (error) {
-        console.log('Error patch cart UPDATE', error)
-      }
-  }
+    }
+
+
+    // DELETE THE CAT 
+    const deleteCart = async (id) => {
+
+        try {
+          const response = await delete_(
+            `${DEV_URL}/cart/delete/${id}/`
+          )
+    
+          console.log('DELETE THE CAT ', response)
+          return response;
+        } catch (error) {
+          console.log('Error deleteCategory', error)
+          return error
+        }
+    }
     
 
 
 return (
     <CartContext.Provider value={{ 
             getCart,
-            cart,
             createCart,
             addItemToCart,
             updateItem,
+            deleteCartItem,
+            deleteCart,
         }}>
       {children}
     </CartContext.Provider>

@@ -43,6 +43,7 @@ export function ApiProvider({ children }) {
             },
           }
         ) 
+        console.log('POST METHOD', response)
         return response
       } catch (error) {
         console.log('Error post_', error)

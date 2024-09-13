@@ -7,12 +7,17 @@ import DEV_URL_R from '../config/ReactDevConfig';
 import { useUser } from '../context/userContext';
 import { useProduct } from '../context/ProductContext';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/cartContext';
 
 const Products = () => {
 
   const { getMe, user} = useUser(); 
   const { getAllProducts} = useProduct(); 
+  const { getCart } = useCart(); 
+
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState(false);
   const [error, setError] = useState(null);
@@ -20,22 +25,21 @@ const Products = () => {
   const token = Cookies.get('token');
   const navigate = useNavigate();
 
-  const userMe= async () => {
-    try {
-        await getMe(token);
-        console.log('userMe:', user, token)
-    } catch (error) {
-        console.log('ERROR:', error)
-        if ( error.status === 401 ) {
-            console.log('Unauthorized:', error.status)
-            navigate('/login');
-        }
-    }}
-
-
-  useEffect(() => {
-    userMe()
-  }, [])
+  // const userCart = async () => {
+  //   try {
+  //       const res = await getCart();
+  //       console.log('CART:', res)
+  //       if ( res.status === 200 ) {
+  //           setCart(res.data)
+  //       }
+  //   } catch (error) {
+  //       console.log('ERROR:', error)
+  //       if ( error.status === 401 ) {
+  //           console.log('Unauthorized:', error.status)
+  //           navigate('/login');
+  //       }
+  //   }
+  // }
 
 
   const fetchProducts = async () => {
@@ -51,14 +55,16 @@ const Products = () => {
         }
     }}
 
+    
     useEffect(() => {
-      fetchProducts()
-    }, [])
+      if (token) {
+        // Only fetch products once the token is available
+        fetchProducts();
+        // userCart()
+      }
+    }, [token]); 
 
 
-  const addProduct = async() => {
-    navigate('/add_product')
-  } 
 
   return (
     <div className='Center'>
@@ -71,7 +77,11 @@ const Products = () => {
             <div className='container'>
               <div className='row'>
                 {products.map((product) => (
-                  <Product key={product.id} product={product} />
+                  <Product 
+                    key={product.id} 
+                    product={product} 
+                    // cart={cart} 
+                  />
                 ))}
               </div>
             </div>

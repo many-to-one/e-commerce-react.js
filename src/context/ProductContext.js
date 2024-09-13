@@ -33,19 +33,17 @@ export function ProductProvider({ children }) {
 
     // CREATE NEW PRODUCT
     const createProduct = async (body) => {
+
       console.log('DEV_URL', DEV_URL)
-      try {
         const response = await post_(
           `${DEV_URL}/products/new`, 
           body,
         )
+
+        console.log('CREATE NEW PRODUCT', response)
         return response
-      } catch (error) {
-        console.log('Error post product', error)
-        return error
-      }
-  
-    }
+      } 
+    
 
 
     // UPDATE PRODUCT
@@ -71,7 +69,7 @@ export function ProductProvider({ children }) {
       console.log('deleteItem', id)
 
       try {
-        const response = await axios.delete(
+        const response = await delete_(
           `${DEV_URL}/products/delete/${id}/`
         )
   
@@ -80,7 +78,7 @@ export function ProductProvider({ children }) {
       } catch (error) {
         console.log('Error deleteItem', error)
       }
-  }
+    }
     
 
 
