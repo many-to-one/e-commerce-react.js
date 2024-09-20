@@ -3,14 +3,18 @@ import '../styles/header.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../context/userContext';
 import Cookies from 'js-cookie';
+import { NavDropdown } from 'react-bootstrap';
+import { useCategory } from '../context/CategoryContext';
 
 const Header = () => {
 
   const token = Cookies.get('token');
   const navigate = useNavigate();
   const { getMe, user} = useUser(); 
+  const { getAllCategories } = useCategory();
 
   const [login, setLogin] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const userMe= async () => {
     try {
@@ -31,7 +35,25 @@ const Header = () => {
 
   useEffect(() => {
     userMe()
-  }, [])
+  }, [token])
+
+  const fetchCategories = async () => {
+    try {
+        const res = await getAllCategories();
+        console.log('fetchCategories:', res);
+        // setShowCategories(true)
+        setCategories(res.data)
+    } catch (error) {
+        console.log('ERROR:', error)
+        if ( error.status === 401 ) {
+            console.log('Unauthorized:', error.status)
+            navigate('/login');
+        }
+    }}
+
+  useEffect(() => {
+    fetchCategories();
+  }, [token])
 
   const goToCart = async () => {
     navigate('/cart')
@@ -41,11 +63,21 @@ const Header = () => {
     navigate('/admin_panel')
   }
 
+  const goToProducts = async (category) => {
+    navigate('/products_by_category', { state: { category } });
+  }
+
+  // console.log('categories----', categories)
+
   return (
     <ul class="nav nav-underline Navi NaviContainer">
         <div className='NaviContainerRight'>
           <Link to="/" className="nav-item nav-link">Home</Link>
-          <Link to="/category" className="nav-item nav-link">Kategorie</Link>
+          <NavDropdown title="Kategorii" id="navbarScrollingDropdown">
+              { categories.map((cat) => (
+                <NavDropdown.Item  onClick={() => goToProducts(cat)} key={cat.id}>{cat.name}</NavDropdown.Item>
+              )) }
+          </NavDropdown>
           <Link to="/products" className="nav-item nav-link">Produkty</Link>
           <form action="" class="d-flex" role="search">
             <input className="form-control me-2 Search" type="search" placeholder="Szukaj..." aria-label="Search"/>

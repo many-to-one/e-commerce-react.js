@@ -21,6 +21,7 @@ import { ApiProvider } from './context/ApiContext';
 import CategoriesAdmin from './components/admin_components/categories/CategoriesAdmin';
 import AddCategory from './components/admin_components/categories/AddCategory';
 import UpdateCategoryAdmin from './components/admin_components/categories/UpdateCategoryAdmin';
+import ProductsByCategory from './components/products/ProductsByCategory';
 
 
 
@@ -37,7 +38,8 @@ function App() {
 
         <Route path="/products" element={<Products />} />
         <Route path="/add_product" element={<Addproduct />} />
-        <Route path="/product" element={<ProductDetail />} />
+        <Route path="/product" element={<ProductDetail />} /> 
+        <Route path="/products_by_category" element={<ProductsByCategory />} />
 
         <Route path="/users" element={<UsersList />} />
         <Route path="/cart" element={<Cart />} />
