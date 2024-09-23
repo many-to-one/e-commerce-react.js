@@ -35,6 +35,20 @@
     }
   }
 
+
+.f-t {
+  color: black !important;
+}
+
+
+.tnl {
+  background-color: blue !important;
+  color: white !important;
+}
+
+
+
+
 .ProductsCats {
   position: absolute;
   left: 10;

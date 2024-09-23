@@ -7,6 +7,7 @@ import { useUser } from '../../../context/userContext';
 import ProductAdmin from './ProductAdmin';
 import { useProduct } from '../../../context/ProductContext';
 import DeleteConfirmationModal from '../DeleteConfirmationModal ';
+import { useCategory } from '../../../context/CategoryContext';
 
 
 const ProductsAdmin = () => {
@@ -15,12 +16,34 @@ const ProductsAdmin = () => {
     const navigate = useNavigate();
     // const { token } = useUser(); 
     const { getAllProducts, deleteItem} = useProduct(); 
+    const { getAllCategories } = useCategory();
+    const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
+    const [productsMain, setProductsMain] = useState([]);
     const [loading, setLoading] = useState(true);
     const [admin, setAdmin] = useState(false);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [activeCategory, setActiveCategory] = useState(null);
+
+
+    const fetchCategories = async () => {
+      try {
+          const res = await getAllCategories();
+          console.log('fetchCategories:', res);
+          setCategories(res.data)
+      } catch (error) {
+          console.log('ERROR:', error)
+          if ( error.status === 401 ) {
+              console.log('Unauthorized:', error.status)
+              navigate('/login');
+          }
+      }}
+
+    useEffect(() => {
+      fetchCategories();
+    }, [])
 
 
     const fetchProducts = async () => {
@@ -28,6 +51,7 @@ const ProductsAdmin = () => {
           const res = await getAllProducts();
           console.log('fetchProducts:', res)
           setProducts(res)
+          setProductsMain(res)
       } catch (error) {
           console.log('ERROR:', error)
           if ( error.status === 401 ) {
@@ -39,6 +63,21 @@ const ProductsAdmin = () => {
     useEffect(() => {
       fetchProducts()
     }, [])
+
+
+    const getProductsAllCat = async () => {
+      setProducts(productsMain);
+      setActiveCategory("Wszystko");
+
+    }
+
+
+    const getProductsByCat = async (cat) => {
+      const filteredProducts = productsMain.filter(product => product.category_id === cat.id);
+      setProducts(filteredProducts);
+      setActiveCategory(cat.name);
+
+    }
 
 
     const addProduct = async() => {
@@ -79,6 +118,14 @@ const ProductsAdmin = () => {
 
     return (
       <div className='CartCont w-75'>
+
+        <div class="d-flex justify-content-between w-100">
+          <p>Dodaj produkt</p>
+          <button type="button" class="btn btn-primary" onClick={addProduct}>Dodaj</button>
+        </div>
+        <br />
+        <hr width="100%"/>
+        <br />
         <div>
           {/* Modal */}
           <DeleteConfirmationModal 
@@ -86,7 +133,34 @@ const ProductsAdmin = () => {
             handleClose={handleClose} 
             handleDelete={deleteProduct} 
           />
-      </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a 
+                className={`Cursor f-t nav-link ${activeCategory === "Wszystko" ? 'active tnl' : 'nav-link'}`} 
+                // class="nav-link active " 
+                aria-current="page" 
+                onClick={getProductsAllCat}
+              >
+                Wszystko
+              </a>
+            </li>
+            {categories.map((cat) => (
+              <li class="nav-item">
+                <a 
+                  className={`Cursor f-t nav-link ${activeCategory === cat.name ? 'active tnl' : 'nav-link'}`} 
+                  key={cat.id} 
+                  // class="nav-link" 
+                  aria-current="page" 
+                  onClick={() => getProductsByCat(cat)}
+                >
+                  {cat.name}
+                </a>
+              </li>
+            ))}
+        </ul>
+  
         <table class="table">
           <thead>
               <tr>
@@ -121,7 +195,6 @@ const ProductsAdmin = () => {
             </tbody>
           ))}
         </table>
-        <button type="button" class="btn btn-primary" onClick={addProduct}>Dodaj nowy</button>
       </div>
     )
     }
