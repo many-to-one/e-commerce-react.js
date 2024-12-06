@@ -74,9 +74,17 @@ const Header = () => {
         <div className='NaviContainerRight'>
           <Link to="/" className="nav-item nav-link">Home</Link>
           <NavDropdown title="Kategorii" id="navbarScrollingDropdown">
-              { categories.map((cat) => (
-                <NavDropdown.Item  onClick={() => goToProducts(cat)} key={cat.id}>{cat.name}</NavDropdown.Item>
-              )) }
+          {categories?.length > 0 ? (
+                    categories.map((cat) => (
+                        <NavDropdown.Item onClick={() => goToProducts(cat)} key={cat.id}>
+                            {cat.name}
+                        </NavDropdown.Item>
+                    ))
+                ) : (
+                    <NavDropdown.Item disabled>
+                        Brak katerorii
+                    </NavDropdown.Item>
+                )}
           </NavDropdown>
           <Link to="/products" className="nav-item nav-link">Produkty</Link>
           <form action="" class="d-flex" role="search">

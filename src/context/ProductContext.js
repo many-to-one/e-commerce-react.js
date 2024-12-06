@@ -88,6 +88,7 @@ return (
             createProduct,
             updateProduct,
             deleteItem,
+            products,
         }}>
       {children}
     </ProductContext.Provider>
